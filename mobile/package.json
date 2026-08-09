@@ -1,0 +1,25 @@
+{
+  "name": "ma-vie-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Coquille native (Android/iOS) de l'app Ma Vie, via Capacitor",
+  "scripts": {
+    "sync": "npx cap sync",
+    "add:android": "npx cap add android",
+    "add:ios": "npx cap add ios",
+    "open:android": "npx cap open android",
+    "open:ios": "npx cap open ios",
+    "icons": "npx @capacitor/assets generate"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capacitor/status-bar": "^6.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2"
+  }
+}

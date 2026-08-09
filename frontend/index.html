@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Ma Vie — Documents &amp; Argent</title>
+
+<!-- PWA : installation sur l'écran d'accueil -->
+<link rel="manifest" href="/manifest.json" />
+<meta name="theme-color" content="#1B2A4A" />
+<link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Ma Vie" />
+<meta name="mobile-web-app-capable" content="yes" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ===================== ÉCRAN AUTHENTIFICATION ===================== -->
+<div id="auth-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="brand">
+      <span class="brand-mark">MV</span>
+      <div>
+        <h1>Ma Vie</h1>
+        <p class="brand-tag">Tes documents. Ton argent. Un seul endroit.</p>
+      </div>
+    </div>
+
+    <div class="auth-tabs">
+      <button class="auth-tab active" data-tab="login">Connexion</button>
+      <button class="auth-tab" data-tab="register">Créer un compte</button>
+    </div>
+
+    <form id="login-form" class="auth-form">
+      <label>Email
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" required autocomplete="current-password" />
+      </label>
+      <p class="form-error" id="login-error"></p>
+      <button type="submit" class="btn-primary">Se connecter</button>
+    </form>
+
+    <form id="register-form" class="auth-form hidden">
+      <label>Nom complet
+        <input type="text" name="name" required />
+      </label>
+      <label>Email
+        <input type="email" name="email" required autocomplete="email" />
+      </label>
+      <label>Mot de passe <span class="hint">(8 caractères min., 1 chiffre)</span>
+        <input type="password" name="password" required minlength="8" autocomplete="new-password" />
+      </label>
+      <p class="form-error" id="register-error"></p>
+      <button type="submit" class="btn-primary">Créer mon compte</button>
+    </form>
+
+    <p class="auth-footnote">Connexion chiffrée. Tes données ne sont visibles que par toi.</p>
+    <p class="app-credit">Développé par Moustapha Diop — Étudiant en L3_RT_UCAK — Tél : 78 183 85 76</p>
+  </div>
+</div>
+
+<!-- ===================== APPLICATION PRINCIPALE ===================== -->
+<div id="app" class="app hidden">
+
+  <!-- Barre du haut, visible uniquement sur mobile : marque + déconnexion -->
+  <header class="mobile-topbar">
+    <div class="brand brand-sm">
+      <span class="brand-mark">MV</span>
+      <span class="brand-name">Ma Vie</span>
+    </div>
+    <button class="logout-trigger icon-btn icon-btn--topbar" title="Déconnexion" aria-label="Déconnexion">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v9"/><path d="M6.2 6.2a8 8 0 1 0 11.6 0"/></svg>
+    </button>
+  </header>
+
+  <aside class="sidebar">
+    <div class="brand brand-sm">
+      <span class="brand-mark">MV</span>
+      <span class="brand-name">Ma Vie</span>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard"><svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-9"/></svg> <span>Tableau de bord</span></button>
+      <button class="nav-item" data-view="documents"><svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/></svg> <span>Mes documents</span></button>
+      <button class="nav-item" data-view="finance"><svg class="nav-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M3 10h18"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg> <span>Mon argent</span></button>
+    </nav>
+    <div class="sidebar-footer">
+      <span id="user-name-display"></span>
+      <button class="logout-trigger btn-link">Déconnexion</button>
+      <p class="app-credit app-credit--sidebar">Développé par Moustapha Diop — L3_RT_UCAK — 78 183 85 76</p>
+    </div>
+  </aside>
+
+  <!-- Barre d'onglets du bas, visible uniquement sur mobile -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-view="dashboard"><svg class="nav-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-9"/></svg><span>Accueil</span></button>
+    <button class="nav-item" data-view="documents"><svg class="nav-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M14 3v5h5"/></svg><span>Documents</span></button>
+    <button class="nav-item" data-view="finance"><svg class="nav-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M3 10h18"/><circle cx="16" cy="14" r="1.2" fill="currentColor" stroke="none"/></svg><span>Argent</span></button>
+  </nav>
+
+  <main class="content">
+
+    <!-- ---------- VUE : TABLEAU DE BORD ---------- -->
+    <section id="view-dashboard" class="view">
+      <header class="view-header">
+        <h2>Tableau de bord</h2>
+        <p class="subtitle">Un aperçu rapide de ta situation.</p>
+      </header>
+
+      <div class="stat-grid">
+        <div class="stat-card stat-card--accent">
+          <span class="stat-label">Solde global</span>
+          <span class="stat-value" id="stat-solde">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Revenus (ce mois)</span>
+          <span class="stat-value stat-value--positive" id="stat-revenus">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Dépenses (ce mois)</span>
+          <span class="stat-value stat-value--negative" id="stat-depenses">—</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Reste à dépenser</span>
+          <span class="stat-value" id="stat-reste">—</span>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="panel">
+          <h3><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:6px"><path d="M6 8a6 6 0 0 1 12 0c0 4 1.5 5.5 1.5 5.5H4.5S6 12 6 8Z"/><path d="M10 18a2 2 0 0 0 4 0"/></svg>Assistant</h3>
+          <ul id="insights-list" class="insights-list">
+            <li class="insight-empty">Pas encore d'informations à afficher.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Dépenses par catégorie (ce mois)</h3>
+          <canvas id="category-chart" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- VUE : DOCUMENTS ---------- -->
+    <section id="view-documents" class="view hidden">
+      <header class="view-header view-header--row">
+        <div>
+          <h2>Mes documents</h2>
+          <p class="subtitle">Cartes, passeport, diplômes, contrats…</p>
+        </div>
+        <button class="btn-primary" id="open-doc-modal">+ Ajouter un document</button>
+      </header>
+      <div id="documents-list" class="card-list"></div>
+    </section>
+
+    <!-- ---------- VUE : FINANCE ---------- -->
+    <section id="view-finance" class="view hidden">
+      <header class="view-header view-header--row">
+        <div>
+          <h2>Mon argent</h2>
+          <p class="subtitle">Revenus, dépenses, budget mensuel.</p>
+        </div>
+        <button class="btn-primary" id="open-tx-modal">+ Ajouter une transaction</button>
+      </header>
+
+      <div class="budget-bar-wrap panel">
+        <div class="budget-bar-header">
+          <span>Budget mensuel</span>
+          <button class="btn-link" id="edit-budget-btn">Modifier</button>
+        </div>
+        <div class="budget-bar-track">
+          <div class="budget-bar-fill" id="budget-bar-fill"></div>
+        </div>
+        <span class="budget-bar-caption" id="budget-bar-caption">—</span>
+      </div>
+
+      <div id="transactions-list" class="card-list"></div>
+    </section>
+
+    <p class="app-credit app-credit--mobile">Développé par Moustapha Diop — L3_RT_UCAK — 78 183 85 76</p>
+  </main>
+</div>
+
+<!-- ===================== MODAL : AJOUTER DOCUMENT ===================== -->
+<div id="doc-modal" class="modal hidden">
+  <div class="modal-card">
+    <h3>Ajouter un document</h3>
+    <form id="doc-form">
+      <label>Titre
+        <input type="text" name="title" required placeholder="Ex : Passeport" />
+      </label>
+      <label>Type
+        <select name="type">
+          <option value="carte_identite">Carte d'identité</option>
+          <option value="passeport">Passeport</option>
+          <option value="permis">Permis</option>
+          <option value="diplome">Diplôme</option>
+          <option value="contrat">Contrat</option>
+          <option value="facture">Facture</option>
+          <option value="certificat">Certificat</option>
+          <option value="autre">Autre</option>
+        </select>
+      </label>
+      <label>Date d'expiration <span class="hint">(optionnel)</span>
+        <input type="date" name="expirationDate" />
+      </label>
+      <label>Fichier <span class="hint">(PDF, JPG, PNG — 5 Mo max)</span>
+        <input type="file" name="file" accept=".pdf,.jpg,.jpeg,.png,.webp" />
+      </label>
+      <label>Notes <span class="hint">(optionnel)</span>
+        <textarea name="notes" rows="2"></textarea>
+      </label>
+      <p class="form-error" id="doc-error"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close-modal>Annuler</button>
+        <button type="submit" class="btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL : AJOUTER TRANSACTION ===================== -->
+<div id="tx-modal" class="modal hidden">
+  <div class="modal-card">
+    <h3>Ajouter une transaction</h3>
+    <form id="tx-form">
+      <div class="type-toggle">
+        <label class="type-option"><input type="radio" name="type" value="revenu" checked /> Revenu</label>
+        <label class="type-option"><input type="radio" name="type" value="depense" /> Dépense</label>
+      </div>
+      <label>Montant (FCFA)
+        <input type="number" name="amount" min="1" step="1" required />
+      </label>
+      <label>Catégorie
+        <select name="category">
+          <option value="salaire">Salaire</option>
+          <option value="transport">Transport</option>
+          <option value="logement">Logement</option>
+          <option value="alimentation">Alimentation</option>
+          <option value="sante">Santé</option>
+          <option value="education">Éducation</option>
+          <option value="loisirs">Loisirs</option>
+          <option value="abonnement">Abonnement</option>
+          <option value="epargne">Épargne</option>
+          <option value="dette">Dette</option>
+          <option value="autre">Autre</option>
+        </select>
+      </label>
+      <label>Date
+        <input type="date" name="date" required />
+      </label>
+      <label>Description <span class="hint">(optionnel)</span>
+        <input type="text" name="description" />
+      </label>
+      <p class="form-error" id="tx-error"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close-modal>Annuler</button>
+        <button type="submit" class="btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ===================== MODAL : BUDGET ===================== -->
+<div id="budget-modal" class="modal hidden">
+  <div class="modal-card">
+    <h3>Définir mon budget mensuel</h3>
+    <form id="budget-form">
+      <label>Budget (FCFA)
+        <input type="number" name="monthlyBudget" min="0" step="1" required />
+      </label>
+      <p class="form-error" id="budget-error"></p>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" data-close-modal>Annuler</button>
+        <button type="submit" class="btn-primary">Enregistrer</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
